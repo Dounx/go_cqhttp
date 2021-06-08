@@ -1,0 +1,28 @@
+name: test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    environment: test
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.0
+      - name: Install dependencies
+        run: bundle install
+      - name: Run tests
+        env:
+          TEST_HOST: ${{ secrets.TEST_HOST }}
+          TEST_ACCESS_TOKEN: ${{ secrets.TEST_ACCESS_TOKEN }}
+          TEST_GROUP_ID: ${{ secrets.TEST_GROUP_ID }}
+          TEST_USER_ID: ${{ secrets.TEST_USER_ID }}
+        run: bundle exec rake test
